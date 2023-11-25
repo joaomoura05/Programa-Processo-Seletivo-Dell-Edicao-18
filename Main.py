@@ -26,7 +26,7 @@ class Programa():
         # Analisando métodos estatísticos do df
         self.df.describe()
 
-    def menu():
+    def menu(self):
         ''' FUNÇÃO CRIADA PARA A CRIAÇÃO DO MENU DO PROGRAMA '''
         print(" _ "*34)
         print("|                                                MENU                                                |")
@@ -68,7 +68,7 @@ class Programa():
             print(f'>>>>>{truck_modality}<<<<<\n')
 
             # Será localizado no 'df_transport' a modalidade requisitadas pelo usurário
-            list_truck_price = list(self.df_tranport.iloc[truck_modality-1])
+            list_truck_price = list(self.df_transporte.iloc[truck_modality-1])
             truck = list_truck_price[0] 
             price = list_truck_price[1]
             
@@ -115,7 +115,7 @@ class Programa():
                 print('\nFAÇA O CADASTRO DA SUA EMPRESA! INSIRA O NOME DE SUA EMPRESA\n')
                 print('-'*80)
                 # Input para o usuário cadastrar sua empresa
-                company = str(input('\nFAÇA O CADASTRO DA SUA EMPRESA! INSIRA O NOME DE SUA EMPRESA'))
+                company = str(input('\nFAÇA O CADASTRO DA SUA EMPRESA! INSIRA O NOME DE SUA EMPRESA: '))
                 print('\nNOME DA EMPRESA INSERIDO!')
                 print(f'>>>>>{company}<<<<<\n')
                 print('-'*80)
@@ -127,8 +127,7 @@ class Programa():
                 for i in range(1,4):
                     city_isf = ['INICIAL', 'DE PARADA', 'FINAL']
                     value_city = city_isf[i-1]
-                    print(f'INSIRA A CIDADE {value_city}')
-                    city_list.append(str(input(f'INSIRA A CIDADE {value_city}').upper()))
+                    city_list.append(str(input(f'INSIRA A CIDADE {value_city}: ').upper()))
                     city_inserted = city_list[i-1]
                     print(f'CIDADE {value_city} INSERIDA FOI: {city_inserted}\n')
                 print('-'*80,'\n')
@@ -143,18 +142,15 @@ class Programa():
                 time.sleep(1)
                 # Dentro desse for será requsitado colocar o nome do item, seu peso e quantidade
                 for i in range(1,5):
-                    print(f'\nINSIRA O NOME DO ITEM NÚMERO {i}')
-                    items_list.append(str(input(f'INSIRA O NOME DO ITEM NÚMERO {i}')))
+                    items_list.append(str(input(f'INSIRA O NOME DO ITEM NÚMERO {i}: ')))
                     item_inserted = items_list[i-1]
                     time.sleep(1)
                     try:
-                        print(f'INSIRA O PESO DO ITEM NÚMERO {i}')
-                        weight_item_input = str(input(f'INSIRA O PESO DO ITEM NÚMERO {i}'))
+                        weight_item_input = str(input(f'INSIRA O PESO DO ITEM NÚMERO {i}: '))
                         weight_item_list.append(float(weight_item_input.replace(",", ".")))
                         weight_item_inserted = weight_item_list[i-1]
                         time.sleep(1)
-                        print(f'INSIRA A QUANTIDADE DO ITEM NÚMERO {i}')
-                        quantity_item_input = int(input(f'INSIRA A QUANTIDADE DO ITEM NÚMERO {i}'))
+                        quantity_item_input = int(input(f'INSIRA A QUANTIDADE DO ITEM NÚMERO {i}: '))
                         quantity_item_list.append(quantity_item_input)
                         quantity_item_inserted = quantity_item_list[i-1]
                         time.sleep(1)
@@ -172,14 +168,14 @@ class Programa():
                 print('-'*80,'\n')
 
                 
-                sum_distance = int(Programa.model_identify(city_list[0], city_list[1], city_list[2]))
-                result = Programa.cost_transport(weight_item_list, quantity_item_list, items_list)
+                sum_distance = int(self.model_identify(city_list[0], city_list[1], city_list[2]))
+                result = self.cost_transport(weight_item_list, quantity_item_list, items_list)
 
                 # Interando sobre a lista retornada da função cost_transport, pegará as modalidade dos caminhões tais como 
                 # ['Caminhão de porte GRANDE', 'Caminhão de porte MÉDIO', 'Caminhão de porte PEQUENO']
                 list_total_prices_per_way = []
                 for i in result[0]:
-                    price_per_km = float(self.df_tranport.loc[self.df_tranport['Itens'] == i]['Preco por Km(R$/km)'])
+                    price_per_km = float(self.df_transporte.loc[self.df_transporte['Itens'] == i]['Preco por Km(R$/km)'])  
                     total_price = round(price_per_km*sum_distance, 2)
                     list_total_prices_per_way.append(total_price)
                     
@@ -263,14 +259,14 @@ class Programa():
         total_weight = sum(list_total_weight_item)
         
         # Modalidades dos caminhões
-        truck_modality_1 = self.df_tranport['Itens'][1]
-        truck_modality_2 = self.df_tranport['Itens'][2]
-        truck_modality_3 = self.df_tranport['Itens'][3]
+        truck_modality_1 = self.df_transporte['Itens'][1]
+        truck_modality_2 = self.df_transporte['Itens'][2]
+        truck_modality_3 = self.df_transporte['Itens'][3]
         list_modality = [truck_modality_1, truck_modality_2, truck_modality_3]
         # Peso de transporte dos caminhões
-        truck_weight_1 = self.df_tranport['Peso de transporte(kg)'][1]
-        truck_weight_2 = self.df_tranport['Peso de transporte(kg)'][2]
-        truck_weight_3 = self.df_tranport['Peso de transporte(kg)'][3]
+        truck_weight_1 = self.df_transporte['Peso de transporte(kg)'][1]
+        truck_weight_2 = self.df_transporte['Peso de transporte(kg)'][2]
+        truck_weight_3 = self.df_transporte['Peso de transporte(kg)'][3]
 
         # Aqui será feito a contagem de quantos caminhões serão necessários para o transporte da carga se baseando no peso dela
         list_transport_truck = []
@@ -308,7 +304,7 @@ class Programa():
         return (list_transport_truck, list_truck_transport_count)
         
 
-    def functionality_3(): 
+    def functionality_3(self): 
         ''' FUNÇÃO QUE APRESENTA O CÓDIGO DA FUNCIONALIDADE 3 '''
         # Pega a lista global e a transforma em um df para a visualização dos dados estatísticos
         df_register = pd.DataFrame(list_transport_register)
@@ -348,12 +344,12 @@ df_tranport = pd.DataFrame({'Itens': list_truck, 'Preco por Km(R$/km)': list_pri
 # display(df_tranport)
 list_transport_register = []
 
+prog_inst = Programa(df, df_tranport)
 
 if __name__ == '__main__':
 
-    Programa(df, df_tranport)
     # Chamando a função menu
-    Programa.menu()
+    prog_inst.menu()
     list_functionality = ['1.[Consultar trechos x modalidade]',
                         '2.[Cadastrar transporte]',
                         '3.[Dados estatísticos]',
@@ -363,7 +359,7 @@ if __name__ == '__main__':
     while i != 4: 
         # Inserido um try e um except, caso o usúario insira alguma entrada inválida
         try: 
-            print("\nDIGITE O NÚMERO DA FUNCIONALIDADE\n")
+            # print("\nDIGITE O NÚMERO DA FUNCIONALIDADE\n")
             # Usuário deve digitar o número de alguma funcionalidade
             i = int(input("DIGITE O NÚMERO DA FUNCIONALIDADE:"))
             number_functionality = list_functionality[i-1]
@@ -372,13 +368,13 @@ if __name__ == '__main__':
             print('-'*60)
             if (i == 1):
                 # Executará o código da funcionalidade 
-                Programa.functionality_1()
+                prog_inst.functionality_1()
             elif (i == 2):
                 # Executará o código da funcionalidade 
-                Programa.functionality_2()
+                prog_inst.functionality_2()
             elif (i == 3):
                 # Executará o código da funcionalidade 
-                Programa.functionality_3()
+                prog_inst.functionality_3()
             elif (i == 4):
                 print("\nO PROGRAMA FOI FINALIZADO! ATÉ LOGO!")
                 break
@@ -391,5 +387,3 @@ if __name__ == '__main__':
             print("\nDIGITE APENAS NÚMEROS (1, 2, 3 OU 4)\n")
             print('-'*60)
             time.sleep(1)
-
-
